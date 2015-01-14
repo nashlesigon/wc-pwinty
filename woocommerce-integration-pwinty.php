@@ -53,6 +53,7 @@ class WC_Integration_Pwinty {
 
 			// Register the integration.
 			add_filter( 'woocommerce_integrations', array( $this, 'add_integration' ) );
+			add_action( 'woocommerce_api_pwintyhandler', 'pwinty_callback_handler' );
 		} else {
 			// throw an admin error if you like
 		}
