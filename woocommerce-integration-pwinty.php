@@ -47,7 +47,6 @@ class WC_Integration_Pwinty {
 			// Include our integration class.
 			include_once 'includes/class-wc-integration-pwinty-integration.php';
 			include_once 'includes/wc-order-functions-pwinty.php';
-			include_once 'includes/class-wc-api-pwintyhandler.php';
 			include_once 'includes/PHPPwinty.php';
 
 
