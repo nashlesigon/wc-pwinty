@@ -8,15 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-		// Actions.
-		add_action( 'init', 'register_submitted_status' );
-		add_action('woocommerce_checkout_order_processed', 'pwinty_create_order', 10, 1);
-		add_action( 'woocommerce_order_status_processing', 'pwinty_add_photos_to_order', 20, 1);
-		add_action( 'woocommerce_order_status_submitted', 'pwinty_submit_order', 20, 1);
-		
-		// Filters.
-		add_filter( 'wc_order_statuses', 'add_submitted_to_order_statuses' );
-		add_filter( 'woocommerce_admin_order_actions', 'add_submit_to_order_admin_actions', 10, 3 ); 
+	
 		
 
 // Register new status
@@ -236,4 +228,5 @@ function pwinty_callback_handler(){
 	}
     wp_reset_postdata();
 }		
+
 
