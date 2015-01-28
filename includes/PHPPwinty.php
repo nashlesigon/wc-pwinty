@@ -155,11 +155,13 @@ class PHPPwinty {
     * @param string $id the id of a specific order to retrieve information on (optional)
     * @return array The order details
     * @access public
+	* 
+	***** Modifyed from @Hudster's original ********
     */
-	function getOrder($id="") {
+	function getOrder($id) {
 		$data = array();
 		$data["id"] = $id;
-		$data = $this->apiCall("/Orders", $data, "GET");
+		$data = $this->apiCall("/Orders/", $id, "GET");
 		if (is_array($data)) {
 			if (isset($data["error"])) {
 				$this->last_error = $data["error"];

@@ -44,27 +44,50 @@ class WC_Integration_Pwinty {
 		
 		// Checks if WooCommerce is installed.
 		if ( class_exists( 'WC_Integration' ) ) {
-			// Include our integration class.
-			include_once 'includes/class-wc-integration-pwinty-integration.php';
-			include_once 'includes/wc-order-functions-pwinty.php';
-			include_once 'includes/PHPPwinty.php';
-
-
-			// Register the integration.
-			add_filter( 'woocommerce_integrations', array( $this, 'add_integration' ) );
-			add_action( 'woocommerce_api_pwintyhandler', 'pwinty_callback_handler' );
-				// Actions.
-		add_action( 'init', 'register_submitted_status' );
-		add_action('woocommerce_checkout_order_processed', 'pwinty_create_order', 10, 1);
-		add_action( 'woocommerce_order_status_processing', 'pwinty_add_photos_to_order', 20, 1);
-		add_action( 'woocommerce_order_status_submitted', 'pwinty_submit_order', 20, 1);
+			
+			
+		include_once 'includes/class-wc-integration-pwinty-integration.php';
 		
-		// Filters.
+		add_filter( 'woocommerce_integrations', array( $this, 'add_integration' ) );
+		
+		include_once 'includes/pwinty-wc-custom-post-types-taxonomies.php';
+		include_once 'includes/wc-pwinty-add-price-to-variations.php';
+		
+		add_action( 'init', 'register_submitted_status', 0 );
+		add_action( 'init', 'pwinty_album_post_type', 0 );
+		add_action( 'init', 'pwinty_print_variations_taxonomy', 0 );		
+		add_action( 'woocommerce_register_taxonomy', 'woo_print_variations_attribute_check', 5 ); //may need to be 'after'
+		add_action( 'woocommerce_after_register_taxonomy', 'pwinty_add_wc_category_tags_to_pwinty_album', 10 );
+        add_action( 'admin_menu', 'pwinty_album_remove_woo_menu_pages', 999 );
+		add_action( 'manage_pwinty_print_variations_custom_column', 'add_price_column_content', 5, 3 );
+		
+        add_filter( 'manage_edit-pwinty_print_variations_columns', 'add_price_column', 5);
 		add_filter( 'wc_order_statuses', 'add_submitted_to_order_statuses' );
 		add_filter( 'woocommerce_admin_order_actions', 'add_submit_to_order_admin_actions', 10, 3 ); 
-		} else {
-			// throw an admin error if you like
-		}
+		
+		
+		include_once 'includes/wc-pwinty-add-price-to-variations.php';
+		
+		add_action( 'add_attachment', 'pwinty_copy_original_image');
+		add_action( 'delete_attachment', 'pwinty_delete_original_image_copy');
+		add_action( 'save_post', 'create_product_from_image', 20    );
+		
+		
+		include_once 'includes/wc-order-interactions-pwinty.php';
+		include_once 'includes/PHPPwinty.php';
+		
+		add_action( 'woocommerce_checkout_order_processed', 'pwinty_create_order', 10, 1);
+		add_action( 'woocommerce_order_status_processing', 'pwinty_add_photos_to_order', 20, 1);
+		add_action( 'woocommerce_order_status_submitted', 'pwinty_submit_order', 20, 1);
+		add_action( 'woocommerce_api_pwintyhandler', 'pwinty_callback_handler' );
+		add_action( 'woocommerce_email_before_order_table', 'display_pwinty_tracking_link' );
+		
+		
+		// Define Plug In Wide Constants	
+		define ("ADMIN_EMAIL", get_option( 'admin_email' ));
+		define ("SITE_URL", get_site_url());
+		
+		} 
 	}
 
 	/**
@@ -74,6 +97,7 @@ class WC_Integration_Pwinty {
 		$integrations[] = 'WC_Integration_Pwinty_Integration';
 		return $integrations;
 	}
+	
 
 }
 

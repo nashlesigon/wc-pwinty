@@ -129,12 +129,12 @@ class WC_Integration_Pwinty_Integration extends WC_Integration {
 					'true'      => __( 'Tracked &#40;Costs More&#44; Faster&#41;', 'woocommerce' )
 				)
 			),
-			'debug' => array(
-				'title'             => __( 'Debug Log', 'woocommerce-pwinty-integration' ),
-				'type'              => 'checkbox',
-				'label'             => __( 'Enable logging', 'woocommerce-pwinty-integration' ),
-				'default'           => 'no',
-				'description'       => __( 'Log events such as API requests', 'woocommerce-pwinty-integration' ),
+			'pwinty_upload_dir' => array(
+				'title'             => __( 'Pwinty Upload Directory', 'woocommerce-pwinty-integration' ),
+				'type'              => 'text',
+				'label'             => __( '', 'woocommerce-pwinty-integration' ),
+				'default'           => 'pwinty',
+				'description'       => __( '', 'woocommerce-pwinty-integration' ),
 			)
 		);
 	}
