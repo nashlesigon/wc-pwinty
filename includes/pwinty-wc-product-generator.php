@@ -219,7 +219,31 @@ unlink($pwintyUploadDir.$fileName);
 return $attachment_ID;
 }
 
-
+// Sync changes to print variation price to all existing variations
+function sync_variation_prices( $term_id, $tt_id ){
+	$term = get_term($term_id, 'pwinty_print_variations');
+	$slug = $term->slug;
+	$price = get_tax_meta($term_id,'print_variation_price');
+	$variationProducts = get_posts(array(
+    'numberposts' => -1,
+    'post_type' => 'product_variation',
+    'tax_query' => array(
+        array(
+        'taxonomy' => 'pa_print_variations',
+        'field' => 'slug',
+        'terms' => $slug )
+		                 )
+						       )
+                            );
+							
+	foreach ( $variationProducts as $product ) {
+		
+		update_post_meta( $variationProducts->ID, '_price', $price );
+		
+	}
+	
+	
+}
 
 
 

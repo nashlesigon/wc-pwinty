@@ -60,7 +60,7 @@ class WC_Integration_Pwinty {
 		add_action( 'woocommerce_after_register_taxonomy', 'pwinty_add_wc_category_tags_to_pwinty_album', 10 );
         add_action( 'admin_menu', 'pwinty_album_remove_woo_menu_pages', 999 );
 		add_action( 'manage_pwinty_print_variations_custom_column', 'add_price_column_content', 5, 3 );
-		
+		add_action( 'edit_pwinty_print_variation', 'sync_variation_prices' );
         add_filter( 'manage_edit-pwinty_print_variations_columns', 'add_price_column', 5);
 		add_filter( 'wc_order_statuses', 'add_submitted_to_order_statuses' );
 		add_filter( 'woocommerce_admin_order_actions', 'add_submit_to_order_admin_actions', 10, 3 ); 
