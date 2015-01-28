@@ -29,13 +29,8 @@ class PHPPwinty {
     *
     * @access private
     */
-	
-	
-	
-	
 
-  
-	function PHPPwinty() {
+  function PHPPwinty() {
 		
 		$settings = get_option('woocommerce_woocommerce_pwinty_integration_settings');
 		define ("PWINTY_MERCHANTID", $settings['pwinty_merchant_id']);
@@ -43,7 +38,7 @@ class PHPPwinty {
 		$api_env = $settings['pwinty_api_env'];
 		
 		if ($api_env == "production") {
-			$this->api_url = "https://api.pwinty.com/v2";
+			$this->api_url = "https://sandbox.pwinty.com/v2"; // Changed to prevent live use of beta
 		} else {
 			$this->api_url = "https://sandbox.pwinty.com/v2";
 		}
