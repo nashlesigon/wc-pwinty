@@ -90,12 +90,15 @@ $fileName = basename(get_attached_file($image->ID));
 
 $description = strip_shortcodes($parentPost->post_content);
 
+$excerpt = $parentPost->post_excerpt;
+
 $user_ID = get_current_user_id();
 	
 $newProduct = array(
   'post_status'           => 'publish', 
   'post_type'             => 'product',
   'post_title'            => $title,
+  'post_excerpt'          => $excerpt,
   'post_author'           => $user_ID,
   'post_content'          => $description,
   'post_excerpt'          => '',
@@ -220,10 +223,15 @@ return $attachment_ID;
 }
 
 // Sync changes to print variation price to all existing variations
-function sync_variation_prices( $term_id, $tt_id ){
+/* Attempt via "edited_pwinty_pwint_variatio hook - left for reference 
+function sync_variation_prices( $term_id ){
+	error_log('sync function called', 0);
 	$term = get_term($term_id, 'pwinty_print_variations');
+	$test = print_r($term,true);
+	error_log($test,0);
 	$slug = $term->slug;
 	$price = get_tax_meta($term_id,'print_variation_price');
+	error_log($price,0);
 	$variationProducts = get_posts(array(
     'numberposts' => -1,
     'post_type' => 'product_variation',
@@ -235,16 +243,53 @@ function sync_variation_prices( $term_id, $tt_id ){
 		                 )
 						       )
                             );
+	$test = print_r($variationProducts,true);
+	error_log($test,0);
 							
 	foreach ( $variationProducts as $product ) {
-		
-		update_post_meta( $variationProducts->ID, '_price', $price );
+		update_post_meta( $product->ID, '_price', $price );
+		update_post_meta( $product->ID, '_regular_price', $price );
+		wc_delete_product_transients( $product->ID );
+		wc_delete_product_transients( $product->post_parent );
 		
 	}
 	
 	
 }
+*/
 
+function sync_variation_prices( $option, $old_value, $value ){
+	
+	$isTaxMeta = strpos( $option, 'ax_meta_' );
+	
+	if ( $isTaxMeta = 1 && isset($value['print_variation_price']) ){
+		
+	$price = $value['print_variation_price'];
+	$term_id = str_replace("tax_meta_", "", $option);
+	$term = get_term( $term_id, 'pwinty_print_variations' );
+	$slug = $term->slug;
+	
+	$variationProducts = get_posts(array(
+    'numberposts' => -1,
+    'post_type' => 'product_variation',
+    'tax_query' => array(
+        array(
+        'taxonomy' => 'pa_print_variations', 
+        'field' => 'slug',
+        'terms' => $slug )
+		                 )
+						       )
+                            );
 
+	foreach ( $variationProducts as $product ) {
+		update_post_meta( $product->ID, '_price', $price );
+		update_post_meta( $product->ID, '_regular_price', $price );
+		wc_delete_product_transients( $product->ID );
+		wc_delete_product_transients( $product->post_parent );
+		delete_post_meta( $product->post_parent, '_min_price_variation_id' );
+	}
+	}
+	
+}
 
 
