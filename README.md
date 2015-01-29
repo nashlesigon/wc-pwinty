@@ -18,7 +18,7 @@ Essentially the plugin creates a custom post type (Pwinty Albums) and a custom t
 ###Limitations###
 
 The order actions buttons in the order admin list view (`...` `Submit For Printing`) will only work with a code update coming in WooComm 2.3.
-![](src="https://raw.githubusercontent.com/SteveHoneyNZ/wc-pwinty/master/Capture.JPG")
+![](src="https://github.com/SteveHoneyNZ/wc-pwinty/blob/master/Capture.JPG")
 
 I've got plenty of improvements which will be added as Issues eventually, lots of scope for more complex functionality. This beta is kept as simple as possible intentionally.
 
