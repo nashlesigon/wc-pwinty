@@ -1,5 +1,7 @@
 <?php
 /**
+ * Work in Progress for now ignore and refer PHPPwinty
+ *
  * A PHP implementation of the Pwinty HTTP API  v2- http://www.pwinty.com/Api
  * Originally developed by Brad Pineau for Picisto.com. Updated to API Version 2 by Dan Huddart. Released to public under Creative Commons.
  * Now re-written to work within Wordpress - ie replacing cURL with wp_remote_get & wp_remote_post by Steve Honey
