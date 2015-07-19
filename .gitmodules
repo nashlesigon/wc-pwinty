@@ -1,0 +1,6 @@
+[submodule "includes/CMB2"]
+	path = includes/CMB2
+	url = https://github.com/WebDevStudios/CMB2.git
+[submodule "includes/Taxonomy_MetaData"]
+	path = includes/Taxonomy_MetaData
+	url = https://github.com/jtsternberg/Taxonomy_MetaData.git

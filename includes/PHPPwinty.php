@@ -6,7 +6,7 @@
  *
  * @author v2 Dan Huddart 
  * @see https://github.com/hudster
- * @version 2.0
+ * @version 3.0
  * @access public
  *
  * based on the original version for Pwinty API v1 by Brad Pineau
@@ -117,7 +117,7 @@ class PHPPwinty {
     * @return string The newly created order id
     * @access public
     */
-	function createOrder($recipientName, $address1, $address2, $addressTownOrCity, $stateOrCounty, $postalOrZipCode, $countryCode, $destinationCountryCode, $useTrackedShipping, $payment, $qualityLevel) {
+	function createOrder( $recipientName, $address1, $address2, $addressTownOrCity, $stateOrCounty, $postalOrZipCode, $countryCode, $destinationCountryCode, $useTrackedShipping, $payment, $qualityLevel ) {
 		$data = array(
 			"recipientName" => $recipientName,
 			"address1" => $address1,
@@ -131,18 +131,24 @@ class PHPPwinty {
 			"payment" => $payment,
 			"qualityLevel" => $qualityLevel
 		);
-		$str_data = json_encode($data);
-		$data = $this->apiCall("/Orders", $str_data, "POST");
-		if (is_array($data)) {
-			if (isset($data["errorMessage"])) {
-				$this->last_error = $data["errorMessage"];
-				return 0;
-			} else {
-				return $data["id"];
-			}
-		} else {
-			return 0;
-		}
+		$jsonData = json_encode($data);
+		$args = array(
+		'headers' => array( 
+		     "X-Pwinty-MerchantId" => PWINTY_MERCHANTID,
+		     "X-Pwinty-REST-API-Key" => PWINTY_APIKEY,
+		     "Content-Type" => "application/json",
+		),
+            'body' => $jsonData
+        );
+		$url = $this->api_url.'/Orders';
+		$response = wp_remote_post( $url, $args );	 
+		$responseBody = json_decode($response["body"], true);
+		 error_log(print_r($responseBody, true));
+         if( array_key_exists("id", $responseBody) ){
+		 return $responseBody["id"];
+		 } else {
+		 return "Error Creating Pwinty Order"; 
+		 }
 	}
     /**
     * Retrieves information about all your orders, or a specific order
@@ -151,7 +157,7 @@ class PHPPwinty {
     * @return array The order details
     * @access public
 	* 
-	***** Modifyed from @Hudster's original ********
+	*
     */
 	function getOrder($id) {
 		$data = array();
@@ -264,25 +270,31 @@ class PHPPwinty {
 	* @return array The order submission status
     * @access public
     */
-	function addPhoto($orderId, $type, $url, $copies, $sizing, $priceToUser, $md5Hash, $file) {
+	function addPhoto( $orderId, $type, $url, $copies ) {
 		$data = array(
 			"type" => $type,
 			"url" => $url,
 			"copies" => $copies,
-			"sizing" => $sizing
+			"sizing" => "ShrinkToFit"
 		);
-		$str_data = json_encode($data);
-		$data = $this->apiCall("/Orders/".$orderId."/Photos", $str_data, "POST");
-		if (is_array($data)) {
-			if (isset($data["error"])) {
-				$this->last_error = $data["error"];
-				return 0;
-			} else {
-				return $data;
-			}
-		} else {
-			return 0;
-		}
+		$jsonData = json_encode($data);
+		$args = array(
+		'headers' => array( 
+		     "X-Pwinty-MerchantId" => PWINTY_MERCHANTID,
+		     "X-Pwinty-REST-API-Key" => PWINTY_APIKEY,
+		     "Content-Type" => "application/json",
+		),
+            'body' => $jsonData
+        );
+		$url = $this->api_url."/Orders/".$orderId."/Photos";
+		$response = wp_remote_post( $url, $args );	 
+		$responseBody = json_decode($response["body"], true);
+		error_log(print_r($responseBody, true));
+         if( isset( $response["error"] ) ){
+		 return $response["error"];
+		 } else {
+		 return $responseBody; 
+		 }
 	}
     /**
     * Retrieves information about the photos in an order, or a specific photo

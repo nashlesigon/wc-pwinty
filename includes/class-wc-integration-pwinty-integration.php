@@ -6,10 +6,6 @@
  * @category Integration
  * @author   Steve Honey
  */
- 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-} 
 
 if ( ! class_exists( 'WC_Integration_Pwinty_Integration' ) ) {
 
@@ -42,6 +38,7 @@ class WC_Integration_Pwinty_Integration extends WC_Integration {
 
 		// Actions.
 		add_action( 'woocommerce_update_options_integration_' .  $this->id, array( $this, 'process_admin_options' ) );
+        
 
 	}
 
@@ -129,17 +126,15 @@ class WC_Integration_Pwinty_Integration extends WC_Integration {
 					'true'      => __( 'Tracked &#40;Costs More&#44; Faster&#41;', 'woocommerce' )
 				)
 			),
-			'pwinty_upload_dir' => array(
-				'title'             => __( 'Pwinty Upload Directory', 'woocommerce-pwinty-integration' ),
-				'type'              => 'text',
-				'label'             => __( '', 'woocommerce-pwinty-integration' ),
-				'default'           => 'pwinty',
-				'description'       => __( '', 'woocommerce-pwinty-integration' ),
+			'debug' => array(
+				'title'             => __( 'Debug Log', 'woocommerce-pwinty-integration' ),
+				'type'              => 'checkbox',
+				'label'             => __( 'Enable logging', 'woocommerce-pwinty-integration' ),
+				'default'           => 'no',
+				'description'       => __( 'Log events such as API requests', 'woocommerce-pwinty-integration' ),
 			)
 		);
 	}
-		
-
 
 }
 }
